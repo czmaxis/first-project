@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class State {
     private String shortcut;
     private String name;
@@ -53,6 +56,8 @@ public class State {
     public void setHaveSpecialVat(boolean haveSpecialVat) {
         this.haveSpecialVat = haveSpecialVat;
     }
+
+
 
 
 }
