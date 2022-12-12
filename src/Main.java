@@ -1,16 +1,32 @@
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.List;
 
 
-public class Main {
+public class Main extends StateData {
+    @Override
+    public String getVat() throws IOException {
+        return super.getVat();
+    }
     public static final String INPUTFILENAME = "vat-eu.txt";
 
     public static final String OUTPUTFILENAME20 = "vat-over-20.txt";
+    public static final String OUTPUTFILENAMEtest = "vat-over-.txt";
 
-    public static void main(String[] args) throws FileNotFoundException , StateException {
+
+
+    //  public static final String CUSTOMOUTPUTFILE = "vat-over-"+ customVat +".txt";
+
+
+    public static void main(String[] args) throws IOException, StateException, NumberFormatException{
 
         StateData list = new StateData();
+
+
+
         try{
             list.readStatesFromFile(INPUTFILENAME);
         }catch (StateException e){
@@ -45,10 +61,19 @@ System.out.println("\nStáty s DPH nad 20%, které nepoužívájí speciální d
             }
 
             try{
-                list.WriteStatesToFile(OUTPUTFILENAME20);
+                list.writeStatesToFile(OUTPUTFILENAME20);
             }catch (StateException e){
                 System.err.println("chyba při zápisu do souboru: " + e.getLocalizedMessage());
             }
+        }
+//        Custom VAT value filer and creating new custom file
+        try {
+
+            list.customWriteStatesToFile("vat-over-"+list.getVat()+".txt");
+        }catch (StateException e){
+            System.err.println("chyba při zápisu do souboru " + e.getLocalizedMessage());
+        }
+
+
     }
-    }
-    }
+}
