@@ -6,7 +6,7 @@ import java.util.Scanner;
 public class StateData {
     ArrayList<State> listOfStates = new ArrayList<>();
 
-    public static final String SPACE  = "\t";
+    public static final String TAB = "\t";
 
     public void readStatesFromFile(String filename) throws StateException, FileNotFoundException {
         String nextLine ="";
@@ -21,7 +21,7 @@ public class StateData {
         try (Scanner scanner = new Scanner(new BufferedReader(new FileReader(filename)))) {
             while (scanner.hasNextLine()){
                 nextLine = scanner.nextLine();
-                items = nextLine.split(SPACE);
+                items = nextLine.split(TAB);
                 lineNumber ++;
 
                 shortcut = items[0];
@@ -43,21 +43,25 @@ public class StateData {
             for (State state : listOfStates){
                 lineNumber ++;
                 String outputLineForList =
-                        state.getName() + SPACE
-                        +state.getShortcut() + SPACE
-                        +state.getHigherVat() + SPACE
-                        +state.getLowerVat() + SPACE;
+                        state.getName() + TAB
+                        +state.getShortcut() + TAB
+                        +state.getHigherVat() + TAB
+                        +state.getLowerVat() + TAB;
                 writer.println(outputLineForList);
             }
             lineNumber ++;
-            String outputLineAfterCycle = "====================" + "\n Sazba VAT 20 % nebo nižší nebo používají speciální sazbu: ";
-            writer.println(outputLineAfterCycle);
+            String outputLineAfterCycle = "====================" + "\nSazba VAT 20 % nebo nižší a zároveň používají speciální sazbu: ";
+
+            writer.print(outputLineAfterCycle);
+
             for (State state : listOfStates){
+                String outputLineForShortcuts =
+                        "(" + state.getShortcut() + ")"+",";
+
                 if (state.getHigherVat() <= 20 || state.isHaveSpecialVat() == true) {
-                    String outputLineForShortcuts =
-                            "(" + state.getShortcut() + ")";
                     writer.print(outputLineForShortcuts);
                 }
+
             }
 
         }catch (IOException e){

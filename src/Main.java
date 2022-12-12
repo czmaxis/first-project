@@ -5,8 +5,8 @@ import java.util.List;
 
 public class Main {
     public static final String INPUTFILENAME = "vat-eu.txt";
-// vat-over-20.txt
-    public static final String OUTPUTFILENAME20 = "vat-over-20.txt"
+
+    public static final String OUTPUTFILENAME20 = "vat-over-20.txt";
 
     public static void main(String[] args) throws FileNotFoundException , StateException {
 
@@ -26,7 +26,7 @@ public class Main {
         }
 
 //Print list of states with VAT above 20% wich haven´t special VAT in same format:
-System.out.println("\nStáty s DPH nad 20%:\n");
+System.out.println("\nStáty s DPH nad 20%, které nepoužívájí speciální daň: \n");
 
         for (State state : listOfStates){
             if (state.getHigherVat() > 20 && state.isHaveSpecialVat() == false){
@@ -36,16 +36,19 @@ System.out.println("\nStáty s DPH nad 20%:\n");
         Collections.sort(listOfStates, Collections.reverseOrder(new VatComparator()));
         System.out.println("====================");
         //Print shortcut´s of states from list with VAT 20% or lower and also with special VAT in using:
-        System.out.print("Sazba VAT 20 % nebo nižší nebo používají speciální sazbu: ");
+        System.out.print("Sazba VAT 20 % nebo nižší + použití speciální daňe: ");
+
+
         for (State state : listOfStates){
             if (state.getHigherVat() <= 20 || state.isHaveSpecialVat() == true){
                 System.out.print(state.getShortcut()+", ");
             }
 
-            try {
-
+            try{
+                list.WriteStatesToFile(OUTPUTFILENAME20);
+            }catch (StateException e){
+                System.err.println("chyba při zápisu do souboru: " + e.getLocalizedMessage());
             }
-
     }
     }
     }
