@@ -1,11 +1,6 @@
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.List;
-
-
 public class Main extends StateData {
     @Override
     public String getVat() throws IOException {
@@ -14,18 +9,10 @@ public class Main extends StateData {
     public static final String INPUTFILENAME = "vat-eu.txt";
 
     public static final String OUTPUTFILENAME20 = "vat-over-20.txt";
-    public static final String OUTPUTFILENAMEtest = "vat-over-.txt";
-
-
-
-    //  public static final String CUSTOMOUTPUTFILE = "vat-over-"+ customVat +".txt";
-
 
     public static void main(String[] args) throws IOException, StateException, NumberFormatException{
 
         StateData list = new StateData();
-
-
 
         try{
             list.readStatesFromFile(INPUTFILENAME);
@@ -55,6 +42,7 @@ System.out.println("\nStáty s DPH nad 20%, které nepoužívájí speciální d
         System.out.print("Sazba VAT 20 % nebo nižší + použití speciální daňe: ");
 
 
+
         for (State state : listOfStates){
             if (state.getHigherVat() <= 20 || state.isHaveSpecialVat() == true){
                 System.out.print(state.getShortcut()+", ");
@@ -66,6 +54,7 @@ System.out.println("\nStáty s DPH nad 20%, které nepoužívájí speciální d
                 System.err.println("chyba při zápisu do souboru: " + e.getLocalizedMessage());
             }
         }
+        System.out.println(" ");
 //        Custom VAT value filer and creating new custom file
         try {
 
@@ -73,7 +62,5 @@ System.out.println("\nStáty s DPH nad 20%, které nepoužívájí speciální d
         }catch (StateException e){
             System.err.println("chyba při zápisu do souboru " + e.getLocalizedMessage());
         }
-
-
     }
 }

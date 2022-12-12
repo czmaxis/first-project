@@ -1,14 +1,9 @@
-import java.util.ArrayList;
-import java.util.List;
-
 public class State {
     private String shortcut;
     private String name;
     private Double higherVat;
     private Double lowerVat;
     private boolean haveSpecialVat;
-
-
     public State(String shortcut, String name, Double higherVat, Double lowerVat, boolean haveSpecialVat) {
         this.shortcut = shortcut;
         this.name = name;
@@ -56,6 +51,8 @@ public class State {
     public void setHaveSpecialVat(boolean haveSpecialVat) {
         this.haveSpecialVat = haveSpecialVat;
     }
+
+
 
 
 

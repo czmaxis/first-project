@@ -1,5 +1,3 @@
-import com.sun.tools.javac.Main;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,13 +29,13 @@ public class StateData {
         Double higherVat = null;
         Double lowerVat = null;
         boolean haveSpecialVat = false;
-        int lineNumber = 0;
+
 
         try (Scanner scanner = new Scanner(new BufferedReader(new FileReader(filename)))) {
             while (scanner.hasNextLine()){
                 nextLine = scanner.nextLine();
                 items = nextLine.split(TAB);
-                lineNumber ++;
+
 
                 shortcut = items[0];
                 name = items[1];
@@ -85,14 +83,7 @@ public class StateData {
 
 
     public void customWriteStatesToFile (String filename)throws StateException, IOException {
-//
-//        BufferedReader reader = new BufferedReader(
-//                new InputStreamReader(System.in));
-//        String userInput = reader.readLine();
-//        if (userInput.isEmpty())
-//        {
-//            userInput = "20";
-//        }
+
             Double customVat = Double.parseDouble(getVat().replaceAll(",", "."));
             for (State state : listOfStates) {
                 if (state.getHigherVat() > customVat) {
@@ -114,33 +105,6 @@ public class StateData {
                 throw new StateException("nastala chyba při zápisu do souboru na řádku: "+ lineNumber + e.getLocalizedMessage());
             }
             }
-
-
-
-
-//Double customVat;
-//    public StateData (Double customVat) {
-//        this.customVat = customVat;
-////        BufferedReader reader = new BufferedReader(
-////                new InputStreamReader(System.in));
-////        String userInput = reader.readLine();
-////        Double customVat = Double.parseDouble(userInput.replaceAll(",", "."));
-//    }
-//
-//    public Double getCustomVat() {
-//        return customVat;
-//    }
-//
-//    public void setCustomVat(Double customVat) throws IOException {
-//                BufferedReader reader = new BufferedReader(
-//                        new InputStreamReader(System.in));
-//        String userInput = reader.readLine();
-//        customVat = Double.parseDouble(userInput.replaceAll(",", "."));
-//        this.customVat = customVat;
-//    }
-
     public List<State> getListOfStates() {
         return new ArrayList<>(listOfStates);}
-
-
 }
