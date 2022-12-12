@@ -1,6 +1,4 @@
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -37,6 +35,38 @@ public class StateData {
                 listOfStates.add(stateFromTxt);
             }
         }
+    }
+
+    public void WriteStatesToFile (String filename) throws StateException{
+        int lineNumber = 0;
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filename))){
+            for (State state : listOfStates){
+                lineNumber ++;
+                String outputLineForList =
+                        state.getName() + SPACE
+                        +state.getShortcut() + SPACE
+                        +state.getHigherVat() + SPACE
+                        +state.getLowerVat() + SPACE;
+                writer.println(outputLineForList);
+            }
+            lineNumber ++;
+            String outputLineAfterCycle = "====================" + "\n Sazba VAT 20 % nebo nižší nebo používají speciální sazbu: ";
+            writer.println(outputLineAfterCycle);
+            for (State state : listOfStates){
+                if (state.getHigherVat() <= 20 || state.isHaveSpecialVat() == true) {
+                    String outputLineForShortcuts =
+                            "(" + state.getShortcut() + ")";
+                    writer.print(outputLineForShortcuts);
+                }
+            }
+
+        }catch (IOException e){
+            throw new StateException("nastala chyba při zápisu do souboru na řádku: "+ lineNumber+ " "+ e.getLocalizedMessage());
+
+
+    }
+
+
     }
     public List<State> getListOfStates() {
         return new ArrayList<>(listOfStates);}

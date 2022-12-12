@@ -4,8 +4,9 @@ import java.util.List;
 
 
 public class Main {
-    public static String INPUTFILENAME = "vat-eu.txt";
-
+    public static final String INPUTFILENAME = "vat-eu.txt";
+// vat-over-20.txt
+    public static final String OUTPUTFILENAME20 = "vat-over-20.txt"
 
     public static void main(String[] args) throws FileNotFoundException , StateException {
 
@@ -34,11 +35,15 @@ System.out.println("\nStáty s DPH nad 20%:\n");
         }
         Collections.sort(listOfStates, Collections.reverseOrder(new VatComparator()));
         System.out.println("====================");
-        //Print shortcut´s of states from list with VAT 20% or lower and also with special VAT:
+        //Print shortcut´s of states from list with VAT 20% or lower and also with special VAT in using:
         System.out.print("Sazba VAT 20 % nebo nižší nebo používají speciální sazbu: ");
         for (State state : listOfStates){
-            if (state.getHigherVat() <= 20 && state.isHaveSpecialVat() == true){
+            if (state.getHigherVat() <= 20 || state.isHaveSpecialVat() == true){
                 System.out.print(state.getShortcut()+", ");
+            }
+
+            try {
+
             }
 
     }
