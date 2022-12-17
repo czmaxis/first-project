@@ -5,20 +5,34 @@ import java.util.List;
 import java.util.Scanner;
 
 public class StateData {
-
-    public String getVat() throws IOException {
+    public Double lineReader() throws IOException {
         BufferedReader reader = new BufferedReader(
                 new InputStreamReader(System.in));
-        String userInput = reader.readLine();
+      String userInput = reader.readLine();
         if (userInput.isEmpty())
         {
             userInput = "20";
         }
-        return userInput;
+
+        double userInputDouble = Double.parseDouble(userInput);
+
+        return userInputDouble;
     }
+    UserVat userVat;
+
+    {
+        try {
+            userVat = new UserVat(lineReader());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
     ArrayList<State> listOfStates = new ArrayList<>();
-    List<String> vstup;
-    ArrayList<State> customListOfStates =  new ArrayList<>();
+    ArrayList<State> listOfStatesForFile = new ArrayList<>();
+
+
     public static final String TAB = "\t";
 
     public void readStatesFromFile(String filename) throws StateException, FileNotFoundException {
@@ -46,6 +60,7 @@ public class StateData {
 
                 State stateFromTxt = new State(shortcut, name, higherVat, lowerVat, haveSpecialVat);
                 listOfStates.add(stateFromTxt);
+                listOfStatesForFile.add(stateFromTxt);
             }
         }
     }
@@ -53,24 +68,44 @@ public class StateData {
 
     public void writeStatesToFile(String filename) throws StateException{
         int lineNumber = 0;
+
+
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename))){
+            writer.println("Seznam států: ");
+            writer.println(" ");
+
+            for (State state : listOfStatesForFile){
+                lineNumber++;
+                String fullOutputLineForList =
+                        state.getName() + TAB
+                        +"("+state.getShortcut()+")" + TAB
+                        + state.getHigherVat() + "%";
+                writer.println(fullOutputLineForList);
+            }
+            writer.println(" ");
+            String statesAbove21Vat = "Státy s DPH nad "+userVat.getUserVat()+" % které nepoužívají speciální daň:";
+            writer.println(statesAbove21Vat);
+            writer.println(" ");
+
+
+            Collections.sort(listOfStates, Collections.reverseOrder(new VatComparator()));
             for (State state : listOfStates){
-                if (state.getHigherVat() > 20 && state.isHaveSpecialVat() == false){
+                if (state.getHigherVat() > userVat.getUserVat() && state.isHaveSpecialVat() == false){
                 lineNumber ++;
                 String outputLineForList =
                         state.getName() + TAB
-                        +state.getShortcut() + TAB
-                        +state.getHigherVat() + TAB
-                        +state.getLowerVat() + TAB;
+                        +"("+state.getShortcut()+")" + TAB
+                        +state.getHigherVat()+" %" + TAB;
+
                 writer.println(outputLineForList);
                 }
             }
             lineNumber ++;
-            String outputLineAfterCycle = "====================" + "\nSazba VAT 20 % nebo nižší a zároveň používají speciální sazbu: ";
+            String outputLineAfterCycle = "====================" + "\nSazba VAT "+userVat.getUserVat()+" a nižší nebo zavedení speciální daně:";
             writer.print(outputLineAfterCycle);
             Collections.sort(listOfStates, Collections.reverseOrder(new VatComparator()));
             for (State state : listOfStates){
-                if (state.getHigherVat() <= 20 || state.isHaveSpecialVat() == true) {
+                if (state.getHigherVat() <= userVat.getUserVat() || state.isHaveSpecialVat()) {
                     String outputShortcutsLine = (state.getShortcut() + ", ");
                     writer.print(outputShortcutsLine);
                 }
@@ -81,30 +116,10 @@ public class StateData {
         }
     }
 
-
-    public void customWriteStatesToFile (String filename)throws StateException, IOException {
-
-            Double customVat = Double.parseDouble(getVat().replaceAll(",", "."));
-            for (State state : listOfStates) {
-                if (state.getHigherVat() > customVat) {
-                    customListOfStates.add(state);
-                }
-            }
-            int lineNumber = 0;
-            try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
-                for (State state : customListOfStates) {
-                    lineNumber++;
-                    String outputLineForList =
-                            state.getName() + TAB
-                                    + state.getShortcut() + TAB
-                                    + state.getHigherVat() + TAB
-                                    + state.getLowerVat() + TAB;
-                    writer.println(outputLineForList);
-                }
-            }catch (IOException e){
-                throw new StateException("nastala chyba při zápisu do souboru na řádku: "+ lineNumber + e.getLocalizedMessage());
-            }
-            }
     public List<State> getListOfStates() {
         return new ArrayList<>(listOfStates);}
+
+
+
+
 }
