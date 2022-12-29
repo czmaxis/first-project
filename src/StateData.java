@@ -82,7 +82,48 @@ public class StateData {
                         + state.getHigherVat() + "%";
                 writer.println(fullOutputLineForList);
             }
+
+            writer.println("\nStáty, které mají daň z přidané hodnoty větší jak 20% a přitom nepoužívají speciální sazbu: \n");
+            Collections.sort(listOfStates, Collections.reverseOrder(new VatComparator()));
+            for (State state : listOfStates){
+                if (state.getHigherVat() > 20 && !state.isHaveSpecialVat()){
+                    writer.println(state.getName()+" ("+state.getShortcut()+") "+state.getHigherVat()+" %");
+                }
+            }
+
+            writer.println("====================");
+            writer.print(("Sazba VAT 20% nebo nižší nebo používají speciální sazbu: "));
+            for (State state : listOfStates){
+                if (state.getHigherVat() <= 20 || state.isHaveSpecialVat()) {
+                    String outputShortcutsLine = (state.getShortcut() + ", ");
+                    writer.print(outputShortcutsLine);
+                }
+            }
+
+
+        }catch (IOException e){
+            throw new StateException("nastala chyba při zápisu do souboru na řádku: "+ lineNumber+ " "+ e.getLocalizedMessage());
+        }
+    }
+
+    public void customWriteStatesToFile(String filename) throws StateException{
+        int lineNumber = 0;
+
+
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filename))){
+            writer.println("Seznam států: ");
             writer.println(" ");
+
+            for (State state : listOfStatesForFile){
+                lineNumber++;
+                String fullOutputLineForList =
+                        state.getName() + TAB
+                                +"("+state.getShortcut()+")" + TAB
+                                + state.getHigherVat() + "%";
+                writer.println(fullOutputLineForList);
+            }
+            writer.println(" ");
+
             String statesAbove21Vat = "Státy s DPH nad "+userVat.getUserVat()+" % které nepoužívají speciální daň:";
             writer.println(statesAbove21Vat);
             writer.println(" ");
@@ -91,22 +132,22 @@ public class StateData {
             Collections.sort(listOfStates, Collections.reverseOrder(new VatComparator()));
             for (State state : listOfStates){
                 if (state.getHigherVat() > userVat.getUserVat() && state.isHaveSpecialVat() == false){
-                lineNumber ++;
-                String outputLineForList =
-                        state.getName() + TAB
-                        +"("+state.getShortcut()+")" + TAB
-                        +state.getHigherVat()+" %" + TAB;
+                    lineNumber ++;
+                    String outputLineForList =
+                            state.getName() + TAB
+                                    +"("+state.getShortcut()+")" + TAB
+                                    +state.getHigherVat()+" %" + TAB;
 
-                writer.println(outputLineForList);
+                    writer.println(outputLineForList);
                 }
             }
             lineNumber ++;
-            String outputLineAfterCycle = "====================" + "\nSazba VAT "+userVat.getUserVat()+" a nižší nebo zavedení speciální daně:";
+            String outputLineAfterCycle = "====================" + "\nSazba VAT "+userVat.getUserVat()+" a nižší nebo zavedení speciální daně: ";
             writer.print(outputLineAfterCycle);
             Collections.sort(listOfStates, Collections.reverseOrder(new VatComparator()));
             for (State state : listOfStates){
                 if (state.getHigherVat() <= userVat.getUserVat() || state.isHaveSpecialVat()) {
-                    String outputShortcutsLine = (state.getShortcut() + ", ");
+                    String outputShortcutsLine = (state.getShortcut()+ ", ");
                     writer.print(outputShortcutsLine);
                 }
             }
@@ -115,6 +156,10 @@ public class StateData {
             throw new StateException("nastala chyba při zápisu do souboru na řádku: "+ lineNumber+ " "+ e.getLocalizedMessage());
         }
     }
+
+
+
+
 
     public List<State> getListOfStates() {
         return new ArrayList<>(listOfStates);}
