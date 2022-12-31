@@ -36,6 +36,7 @@ public class StateData {
     public static final String TAB = "\t";
 
     public void readStatesFromFile(String filename) throws StateException, FileNotFoundException {
+        int lineNumber = 0;
         String nextLine ="";
         String[] items = new String[0];
         String shortcut = null;
@@ -57,11 +58,13 @@ public class StateData {
                 lowerVat = Double.parseDouble(items[3].replaceAll(",", "."));
                 haveSpecialVat = Boolean.parseBoolean(items[4]);
 
-
+                lineNumber ++;
                 State stateFromTxt = new State(shortcut, name, higherVat, lowerVat, haveSpecialVat);
                 listOfStates.add(stateFromTxt);
                 listOfStatesForFile.add(stateFromTxt);
             }
+        }catch (IOException e){
+            throw new StateException("nastala chyba při čtení ze souboru na řádku: "+ lineNumber + " "+ e.getLocalizedMessage());
         }
     }
 

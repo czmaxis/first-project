@@ -1,19 +1,18 @@
+
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-public class Main extends StateData {
-    @Override
-    public Double lineReader() throws IOException {
-        return super.lineReader();
-    }
+public class Main  {
+
     public static final String INPUTFILENAME = "vat-eu.txt";
-    public static void main(String[] args) throws IOException, StateException, NumberFormatException{
+    public static void main(String[] args) {
         System.out.println("Zadejte prosím výši sazby VAT. Bez zadaní sazby bude po stisknutí enteru nastavena výše sazby na 20% ");
         StateData list = new StateData();
 
         try{
             list.readStatesFromFile(INPUTFILENAME);
-        }catch (StateException e){
+        }catch (StateException | FileNotFoundException e){
             System.err.println("chyba při čtení souboru: " + e.getLocalizedMessage());
         }
 

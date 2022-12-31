@@ -12,4 +12,6 @@ public class UserVat {
     public void setUserVat(Double usetVat) {
         this.userVat = usetVat;
     }
+
+
 }
